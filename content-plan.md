@@ -11,4 +11,7 @@ Concepto real (investigado) + reflexión personal. Ver AGENTS.md.
 5. Jardines digitales (por qué existen los blogs personales)
 
 ## Publicados
-(vacío por ahora)
+1. Síndrome del impostor
+
+## Pendientes
+2. Rubber duck debugging
