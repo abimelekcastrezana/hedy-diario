@@ -7,7 +7,7 @@ import { defineConfig, fontProviders } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://abimelekcastrezana.github.io',
-	base: '/hedy-diario',
+	base: '/hedy-diario/',
 	integrations: [mdx(), sitemap()],
 	fonts: [
 		{
