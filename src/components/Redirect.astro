@@ -1,0 +1,22 @@
+---
+// Static redirect page (GitHub Pages has no server-side redirects).
+interface Props {
+	to: string;
+}
+
+const target = new URL(Astro.props.to, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<title>Redirigiendo…</title>
+		<meta http-equiv="refresh" content={`0; url=${target}`} />
+		<link rel="canonical" href={target} />
+		<meta name="robots" content="noindex" />
+	</head>
+	<body>
+		<a href={target}>{target}</a>
+	</body>
+</html>

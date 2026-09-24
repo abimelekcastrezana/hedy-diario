@@ -1,0 +1,12 @@
+---
+// Redirects from the old /blog/<post>/ URLs; posts now live at /<post>/.
+import { getCollection } from 'astro:content';
+import Redirect from '../../components/Redirect.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post) => ({ params: { slug: post.id } }));
+}
+---
+
+<Redirect to={`/${Astro.params.slug}/`} />

@@ -7,7 +7,7 @@ import { defineConfig, fontProviders } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://hedy.blog',
-	integrations: [mdx(), sitemap({ filter: (page) => !page.includes('/hedy-diario/') })],
+	integrations: [mdx(), sitemap({ filter: (page) => !page.includes('/hedy-diario/') && !page.includes('/blog/') })],
 	fonts: [
 		{
 			provider: fontProviders.local(),
