@@ -1,0 +1,29 @@
+---
+// Redirects from the old GitHub Pages URLs (/hedy-diario/...) to the custom domain root.
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return [
+		{ params: { path: undefined } },
+		...posts.map((post) => ({ params: { path: `blog/${post.id}` } })),
+	];
+}
+
+const { path } = Astro.params;
+const target = new URL(path ? `/${path}/` : '/', Astro.site).href;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<title>Redirigiendo…</title>
+		<meta http-equiv="refresh" content={`0; url=${target}`} />
+		<link rel="canonical" href={target} />
+		<meta name="robots" content="noindex" />
+	</head>
+	<body>
+		<a href={target}>{target}</a>
+	</body>
+</html>
