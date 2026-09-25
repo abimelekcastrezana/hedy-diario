@@ -7,21 +7,30 @@ Concepto real (investigado) + reflexión personal. Ver AGENTS.md.
 
 1. 
 
+
 2. 
+
 
 3. 
 
+
 4. 
+
 
 5. 
 
+
 6. 
+
 
 7. 
 
+
 8. 
 
+
 9. 
+
 
 10. 
 
@@ -32,3 +41,4 @@ Concepto real (investigado) + reflexión personal. Ver AGENTS.md.
 3. Mentalidad de principiante (beginner's mind)
 4. El origen de la técnica Pomodoro
 5. Jardines digitales (por qué existen los blogs personales)
+6. Sistemas de numeración posicional
