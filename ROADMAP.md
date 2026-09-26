@@ -23,9 +23,9 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 
 **Meta:** ningún post se publica sin revisión, y el pipeline es seguro.
 
-- [ ] Revocar el token de GitHub expuesto en el remote del repo y reemplazarlo
+- [x] Revocar el token de GitHub expuesto en el remote del repo y reemplazarlo
       (credential helper o token nuevo con permisos mínimos)
-- [ ] Activar **Enforce HTTPS** en Settings → Pages
+- [x] Activar **Enforce HTTPS** en Settings → Pages
 - [ ] Quitar el workflow `.github/workflows/auto-merge-post.yml`
 - [ ] Proteger `main` en GitHub: exigir PR y no permitir saltarse la regla
 - [ ] Verificar que Hedy puede abrir y listar PRs desde el contenedor (`gh` CLI o API)
