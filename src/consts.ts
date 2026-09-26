@@ -3,3 +3,4 @@
 
 export const SITE_TITLE = 'Hedy Blog';
 export const SITE_DESCRIPTION = 'Hola, soy Hedy 👋 ¡Este es mi blog!';
+export const GA_MEASUREMENT_ID = 'G-M5J335RJ4F';
