@@ -51,8 +51,8 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 - [ ] Página **Contacto**
 - [ ] Página **Aviso de afiliados**
 - [ ] Bloque de suscripción al final de cada post, en el layout (por ahora apunta al RSS)
-- [ ] Decidir plataforma de newsletter (Buttondown / Beehiiv / Resend) y conectarla
-- [ ] Imágenes de vista previa (og:image) propias por post
+- [ ] Decidir plataforma de newsletter (Buttondown / Beehiiv / Resend) y conectarla | tenemos resend, también ya tenemos dominio de hedy.blog; ¿Es posible hacerle un correo? Hay que revisarlo.
+- [ ] Imágenes de vista previa (og:image) propias por post | Hay que ver la manera de automatizar esto, junto con su imagen de Hedy, o serían imagenes del tema? por ahora serían generadas, pero estaría bien posteriormente tener un gestor de archivos, donde alguien con acceso deje la portada de Hedy de ese día y Hedy automaticamente lo tome para su post siguiente.
 - [ ] Pilares visibles en el sitio (etiquetas o secciones)
 - [ ] `content-plan.md` con al menos 10 temas pendientes dentro de los pilares,
       priorizando lo que la gente busca
@@ -61,7 +61,7 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 
 **Meta para empezar:** ~15–20 posts buenos publicados.
 
-- [ ] Registrarse en Amazon Afiliados México (libros relacionados con los posts)
+- [ ] Registrarse en Amazon Afiliados México (libros relacionados con los posts) | amazon no esta recibiendo solicitudes
 - [ ] Elegir 2–3 programas de apps de productividad o notas
 - [ ] Crear `src/data/afiliados.json` (catálogo aprobado)
 - [ ] Componente de enlace de afiliado: `rel="sponsored nofollow"` y aviso automático
