@@ -51,7 +51,8 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 
-<!-- Google Analytics (production builds only) -->
+<!-- Google Analytics (production builds only). Keep the ID in sync with GA_MEASUREMENT_ID in consts.ts;
+     define:vars would wrap this in a function and hide the global gtag(). -->
 {
 	import.meta.env.PROD && (
 		<>
@@ -60,13 +61,13 @@ const { title, description, image = FallbackImage } = Astro.props;
 				async
 				src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
 			/>
-			<script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+			<script is:inline>
 				window.dataLayer = window.dataLayer || [];
 				function gtag() {
 					dataLayer.push(arguments);
 				}
 				gtag('js', new Date());
-				gtag('config', GA_MEASUREMENT_ID);
+				gtag('config', 'G-M5J335RJ4F');
 			</script>
 		</>
 	)
