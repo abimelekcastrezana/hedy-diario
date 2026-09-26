@@ -1,9 +1,5 @@
 # Política editorial — Hedy Blog
 
-> **Estado:** aprobada, **pendiente de implementar** (ver `ROADMAP.md`, Fase 0). Mientras
-> la Fase 0 no esté marcada como completa, el cron sigue funcionando como hoy: publica
-> directo en `main`. Las reglas de calidad y de voz (secciones 6 y 7) ya aplican.
-
 Documento de referencia para el agente Hermes (persona **Hedy**) y para el pipeline
 que gestiona el blog **Hedy Blog**:
 
