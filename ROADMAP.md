@@ -6,7 +6,7 @@ sacrificar la confianza del lector. Las reglas editoriales están en `EDITORIAL_
 Cada fase arranca cuando se cumple su meta, no en una fecha fija. Al terminar una tarea se
 marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit.
 
-**Estado actual:** Fase 0 ✅ completa · siguiente: Fase 1 · todo cambio a `main` pasa por PR · 6 posts publicados · cron publica directo en `main`.
+**Estado actual:** Fase 0 ✅ completa · siguiente: Fase 1 · todo cambio a `main` pasa por PR · 8 posts publicados · el cron de Hedy abre PRs y Abimelek decide qué se publica.
 
 ---
 
