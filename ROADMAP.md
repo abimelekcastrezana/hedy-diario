@@ -6,7 +6,7 @@ sacrificar la confianza del lector. Las reglas editoriales están en `EDITORIAL_
 Cada fase arranca cuando se cumple su meta, no en una fecha fija. Al terminar una tarea se
 marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit.
 
-**Estado actual:** Fase 0 (sin empezar) · 6 posts publicados · cron publica directo en `main`.
+**Estado actual:** Fase 0 (en curso) · 6 posts publicados · cron publica directo en `main`.
 
 ---
 
@@ -23,10 +23,9 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 
 **Meta:** ningún post se publica sin revisión, y el pipeline es seguro.
 
-- [x] Revocar el token de GitHub expuesto en el remote del repo y reemplazarlo
-      (credential helper o token nuevo con permisos mínimos)
-- [x] Activar **Enforce HTTPS** en Settings → Pages
-- [ ] Quitar el workflow `.github/workflows/auto-merge-post.yml`
+- [x] Token de GitHub en el remote: se mantiene, decisión de Abimelek (2026-09-26)
+- [x] Activar **Enforce HTTPS** en Settings → Pages (2026-09-26)
+- [x] Quitar el workflow `.github/workflows/auto-merge-post.yml` (2026-09-26)
 - [ ] Proteger `main` en GitHub: exigir PR y no permitir saltarse la regla
 - [ ] Verificar que Hedy puede abrir y listar PRs desde el contenedor (`gh` CLI o API)
 - [ ] Reescribir el prompt del cron `hedy-diario-post`:
@@ -93,3 +92,4 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 
 - **2026-09-24** — Dominio `hedy.blog`, rutas en la raíz, redirecciones, título y descripción.
 - **2026-09-26** — Política editorial y este roadmap agregados al repo.
+- **2026-09-26** — Enforce HTTPS activo; token se mantiene; quitado el auto-merge; agregado `scripts/hedy-pr.py`.
