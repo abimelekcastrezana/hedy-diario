@@ -26,8 +26,9 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 - [x] Token de GitHub en el remote: se mantiene, decisión de Abimelek (2026-09-26)
 - [x] Activar **Enforce HTTPS** en Settings → Pages (2026-09-26)
 - [x] Quitar el workflow `.github/workflows/auto-merge-post.yml` (2026-09-26)
-- [ ] Proteger `main` en GitHub (ruleset): exigir PR; única excepción, la deploy key de Claude Code
-      (el token del remote no tiene permiso de Administración: lo crea Abimelek en la UI)
+- [ ] Proteger `main` en GitHub (ruleset "Proteger main"): exigir PR, sin excepciones.
+      Los cambios de Claude Code también van por PR; Claude los fusiona con `gh` desde la Mac de Abimelek.
+      Hedy nunca fusiona (su script no tiene merge y la política lo prohíbe).
 - [x] Verificar que Hedy puede abrir y listar PRs desde el contenedor (`scripts/hedy-pr.py`) (2026-09-26)
 - [x] Reescribir el prompt del cron `hedy-diario-post` (2026-09-26):
       rama `post/*`, PR, revisión de PR pendiente, correos de revisión, recordatorio y fallo
@@ -37,6 +38,7 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 - [x] Corregir vía PR el post de **Pomodoro** (partes escritas como si fuera Cirillo, sin fuentes) (2026-09-26, PR de corrección)
 - [x] Corregir vía PR el post de **mente de principiante** (frases rotas, detalles internos) (2026-09-26, PR de corrección)
 - [x] Analítica: Google Analytics 4 (`G-M5J335RJ4F`), por integración con Search Console y AdSense (2026-09-26)
+      Configurado: tráfico interno excluido (IPv4 + IPv6 de casa) con filtro activo.
 - [x] Dar de alta el sitio en Google Search Console y enviar el sitemap; agregado `robots.txt` (2026-09-26)
 
 ## Fase 1 — Base para monetizar
