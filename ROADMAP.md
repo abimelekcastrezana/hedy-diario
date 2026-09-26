@@ -6,7 +6,7 @@ sacrificar la confianza del lector. Las reglas editoriales están en `EDITORIAL_
 Cada fase arranca cuando se cumple su meta, no en una fecha fija. Al terminar una tarea se
 marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit.
 
-**Estado actual:** Fase 0 (en curso) · los posts ya llegan como PR para revisión · 6 posts publicados · cron publica directo en `main`.
+**Estado actual:** Fase 0 ✅ completa · siguiente: Fase 1 · todo cambio a `main` pasa por PR · 6 posts publicados · cron publica directo en `main`.
 
 ---
 
@@ -26,8 +26,10 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 - [x] Token de GitHub en el remote: se mantiene, decisión de Abimelek (2026-09-26)
 - [x] Activar **Enforce HTTPS** en Settings → Pages (2026-09-26)
 - [x] Quitar el workflow `.github/workflows/auto-merge-post.yml` (2026-09-26)
-- [ ] Proteger `main` en GitHub (ruleset): exigir PR; única excepción, la deploy key de Claude Code
-      (el token del remote no tiene permiso de Administración: lo crea Abimelek en la UI)
+- [x] Proteger `main` en GitHub (ruleset "Proteger main"): exigir PR, sin excepciones (2026-09-26).
+      Probado: un push directo de Hedy a `main` es rechazado (GH013).
+      Los cambios de Claude Code también van por PR; Claude los fusiona con `gh` desde la Mac de Abimelek.
+      Hedy nunca fusiona (su script no tiene merge y la política lo prohíbe).
 - [x] Verificar que Hedy puede abrir y listar PRs desde el contenedor (`scripts/hedy-pr.py`) (2026-09-26)
 - [x] Reescribir el prompt del cron `hedy-diario-post` (2026-09-26):
       rama `post/*`, PR, revisión de PR pendiente, correos de revisión, recordatorio y fallo
@@ -37,6 +39,7 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 - [x] Corregir vía PR el post de **Pomodoro** (partes escritas como si fuera Cirillo, sin fuentes) (2026-09-26, PR de corrección)
 - [x] Corregir vía PR el post de **mente de principiante** (frases rotas, detalles internos) (2026-09-26, PR de corrección)
 - [x] Analítica: Google Analytics 4 (`G-M5J335RJ4F`), por integración con Search Console y AdSense (2026-09-26)
+      Configurado: tráfico interno excluido (IPv4 + IPv6 de casa) con filtro activo.
 - [x] Dar de alta el sitio en Google Search Console y enviar el sitemap; agregado `robots.txt` (2026-09-26)
 
 ## Fase 1 — Base para monetizar
@@ -94,6 +97,7 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 - **2026-09-24** — Dominio `hedy.blog`, rutas en la raíz, redirecciones, título y descripción.
 - **2026-09-26** — Política editorial y este roadmap agregados al repo.
 - **2026-09-26** — Enforce HTTPS activo; token se mantiene; quitado el auto-merge; agregado `scripts/hedy-pr.py`.
+- **2026-09-26** — `main` protegida con ruleset (solo por PR). Claude fusiona sus PRs con `gh` desde la Mac. **Fase 0 completa.**
 - **2026-09-26** — PR #2 (corrección de Pomodoro y mente de principiante) publicado. Search Console con sitemap; Google Analytics 4 y `robots.txt` agregados. Nota: GA4 usa cookies; el aviso de consentimiento para Europa queda en la Fase 3.
 - **2026-09-26** — PR #1 (sesgo de confirmación) publicado por Abimelek: primer ciclo completo.
 - **2026-09-26** — Cron reescrito al flujo de PR; política enlazada desde `AGENTS.md`. Primera corrida: PR #1 (sesgo de confirmación). Nota: un commit vacío de prueba (`3b1c7fe`) entró a `main` por error antes de que existiera la protección.
