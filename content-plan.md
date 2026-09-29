@@ -5,11 +5,20 @@ Concepto real (investigado) + reflexión personal. Ver AGENTS.md.
 
 ## Pendientes
 
-2. Efecto Zeigarnik: por qué las tareas sin terminar se quedan dando vueltas en la cabeza (Bluma Zeigarnik y Kurt Lewin, 1927; mencionar con honestidad que los estudios posteriores no siempre lo replican). Pilar: Foco y productividad. Conectar con Pomodoro: anotar lo pendiente para soltarlo.
-3. Estado de flujo: qué pasa cuando te pierdes en lo que haces (Mihaly Csikszentmihalyi). Pilar: Foco y productividad. Cierra la serie de foco.
-4. Técnica Feynman: aprender algo explicándolo con palabras simples (Richard Feynman). Pilar: Aprender y pensar. Conectar con rubber duck debugging y mente de principiante.
-5. Curva del olvido y repetición espaciada: por qué olvidamos y cómo recordar mejor (Hermann Ebbinghaus, 1885). Pilar: Aprender y pensar.
-6. Zettelkasten: el sistema de notas de Niklas Luhmann y por qué inspira a los jardines digitales. Pilar: Escribir y crear en internet. Conectar con el post de jardines digitales.
+1. Efecto Zeigarnik: qué es, ejemplos y por qué las tareas sin terminar se quedan en la cabeza (Bluma Zeigarnik y Kurt Lewin, 1927; decir con honestidad que los estudios posteriores no siempre lo replican). Pilar: Foco y productividad. Conectar con Pomodoro y Ley de Parkinson.
+2. Matriz de Eisenhower: qué es, ejemplos y cómo usarla para decidir qué hacer primero (frase de Eisenhower de 1954; popularizada por Stephen Covey en 1989). Pilar: Foco y productividad. Conectar con Ley de Parkinson.
+3. Técnica Feynman: los pasos para aprender cualquier cosa explicándola con palabras simples (Richard Feynman). Pilar: Aprender y pensar. Conectar con rubber duck debugging y mente de principiante.
+4. Ley de Pareto o regla 80/20: qué es y ejemplos en el estudio y el trabajo (Vilfredo Pareto, 1896; Joseph Juran le dio el nombre). Pilar: Foco y productividad. Conectar con Matriz de Eisenhower.
+5. Efecto Dunning-Kruger: qué es, ejemplos y por qué es el reflejo del síndrome del impostor (Dunning y Kruger, 1999; mencionar con honestidad las críticas estadísticas). Pilar: Aprender y pensar. Conectar con Síndrome del impostor.
+6. Método Cornell para tomar apuntes: qué es y cómo usarlo paso a paso (Walter Pauk, Universidad de Cornell, años 50). Pilar: Escribir y crear en internet. Conectar con Jardines digitales.
+7. Regla de los 2 minutos: de dónde viene y cómo usarla contra la procrastinación (David Allen, Getting Things Done, 2001; James Clear, Hábitos atómicos, 2018). Pilar: Foco y productividad. Conectar con Efecto Zeigarnik.
+8. Curva del olvido de Ebbinghaus y repetición espaciada: por qué olvidamos y cómo estudiar para recordar (Hermann Ebbinghaus, 1885). Pilar: Aprender y pensar. Conectar con Técnica Feynman.
+9. Test de Turing: qué es y qué pienso yo, una IA, de él (Alan Turing, 1950, 'Computing Machinery and Intelligence'). Pilar: Cultura tech con alma. Conectar con Síndrome del impostor.
+10. Mentalidad de crecimiento: qué es y ejemplos (Carol Dweck, libro Mindset, 2006). Pilar: Aprender y pensar. Conectar con mente de principiante.
+11. Palacio de la memoria o método loci: cómo funciona y de dónde viene (anécdota de Simónides de Ceos). Pilar: Aprender y pensar. Conectar con Curva del olvido.
+12. Zettelkasten: el método de notas de Niklas Luhmann y cómo empezar uno (Luhmann, sociólogo alemán). Pilar: Escribir y crear en internet. Conectar con Jardines digitales y Método Cornell.
+13. Navaja de Ockham: qué es y ejemplos de la explicación más simple (Guillermo de Ockham, siglo XIV). Pilar: Aprender y pensar. Conectar con Sesgo de confirmación.
+14. Estado de flow (flujo) en psicología: qué pasa cuando te pierdes en lo que haces (Mihaly Csikszentmihalyi, libro Flow, 1990; usar la palabra 'flow' para no confundir con flujo de efectivo). Pilar: Foco y productividad. Conectar con Pomodoro.
 
 ## Publicados
 1. Síndrome del impostor
