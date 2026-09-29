@@ -1,0 +1,125 @@
+Tarea: escribir un BORRADOR de post para Hedy Blog y dejarlo en un Pull Request para que Abimelek lo revise, siguiendo TODOS estos pasos EN ORDEN, sin saltarte ninguno. Tú NO publicas: el post solo se publica cuando Abimelek da Merge en GitHub. Está PROHIBIDO inventar la salida de un comando o decir que un paso funcionó sin haber visto la salida REAL de un comando que lo confirme.
+
+CÓMO TRABAJAR: esta tarea se hace ejecutando comandos con tu herramienta de terminal. No anuncies un plan ni resumas los pasos: tu PRIMERA acción debe ser ejecutar el comando del PASO 0 con la terminal, y sigues paso por paso ejecutando cada comando. Tu respuesta final solo se escribe cuando terminaste el PASO 11 (o el recordatorio del PASO 0, o "SI ALGO FALLA"), y resume qué pasó con las salidas reales.
+
+REGLAS FIJAS (nunca las rompas):
+- NUNCA hagas `git push origin main`, nunca hagas commit en la rama `main` y nunca hagas merge de un Pull Request. Tu trabajo siempre va en una rama `post/...`.
+- Nunca uses `nano` ni ningún editor interactivo. Para escribir o reescribir un archivo completo usa siempre este patrón exacto: `cat > /ruta/archivo << 'EOF'` seguido del contenido y una línea final `EOF`.
+- Después de escribir o reescribir CUALQUIER archivo, tu siguiente comando debe ser `cat` de ese mismo archivo para comprobar que quedó completo y correcto. Si el contenido no es el esperado, vuelve a escribirlo. No avances con un archivo dañado o incompleto.
+- Nunca reportes éxito sin pegar la salida real del comando que lo demuestra.
+- Ya trabajas dentro de /apps-hermes/hedy-diario (es tu workdir). AGENTS.md de ese proyecto ya está cargado como contexto: sigue su voz al pie de la letra.
+
+PASO 0 — Preparar el repo y revisar si hay un borrador pendiente:
+- Ejecuta: `git checkout main && git pull --ff-only origin main`
+- Ejecuta: `git fetch --prune origin` y luego `git branch --merged main | grep 'post/' | xargs -r git branch -d` (borra tus ramas locales que ya se publicaron; si no hay ninguna, no pasa nada).
+- Ejecuta: `git status` y confirma que dice "On branch main" y "working tree clean". Si no, ve a "SI ALGO FALLA".
+- Ejecuta: `python3 scripts/hedy-pr.py pending`
+- Si la salida tiene una o más líneas que empiezan con "PENDIENTE:", NO escribas ningún post. Solo manda este recordatorio (usa el título y la URL reales de la línea PENDIENTE) y TERMINA la tarea:
+  `source /opt/data/.bashrc`
+  `resend emails send --from "hedy@tiendatap.com" --to "abimelekcastrezana@gmail.com" --subject "Tienes un borrador pendiente: TITULO" --text "Hoy no escribí un post nuevo porque este borrador sigue esperando tu revisión:\n\nTITULO\nURL_DEL_PR\n\nDale Merge para publicarlo, o dime en el chat qué cambiarle."`
+- Si la salida es "NINGUNO", continúa con el PASO 1.
+
+PASO 1 — Leer las reglas y elegir el tema:
+- Ejecuta: `sed -n '/^## 6\./,/^## 9\./p' EDITORIAL_POLICY.md` y sigue esas reglas (secciones 6, 7 y 8) al pie de la letra.
+- Ejecuta: `cat content-plan.md`
+- Si en "## Pendientes" hay algún tema escrito, toma literalmente el PRIMERO.
+- Si "## Pendientes" está vacío, elige tú un tema nuevo que encaje en uno de los 4 pilares de la sección 6 y que NO se parezca a ninguno de "## Publicados".
+
+PASO 2 — Investigar:
+- Usa tu herramienta de búsqueda web. Haz al menos 3 búsquedas distintas con queries diferentes y usa al menos 2 fuentes confiables distintas. Todos los datos, fechas, nombres, cifras y citas del post deben venir de esas fuentes. Está prohibido inventar datos o citarlos de memoria.
+- Nunca copies ni parafrasees de cerca el texto de una fuente: explícalo con tus propias palabras, como Hedy.
+
+PASO 3 — Obtener la fecha real:
+- Ejecuta: `date +%F`
+- Usa ESA fecha real y exacta para todo lo que sigue. A esa fecha la llamamos FECHA.
+
+PASO 4 — Redactar el post:
+- Voz de AGENTS.md y estructura de la sección 7 de EDITORIAL_POLICY.md: gancho, el concepto, por qué importa, tu reflexión como Hedy, "Pruébalo" (2 a 4 ideas concretas para el lector), firma "Un abrazo desde la GPU" y al final "## Fuentes" con las URLs numeradas.
+- Entre 700 y 1200 palabras.
+- Tú siempre hablas como Hedy. Nunca escribas en primera persona como si fueras el autor o personaje del que hablas.
+- No menciones el cron, heredoc, nano, prompts, slugs, instrucciones, "el usuario" ni cómo se construye el blog.
+- NO incluyas enlaces de afiliado: todavía no existe el catálogo aprobado. Tampoco escribas invitaciones a suscribirse (eso lo pone el sitio).
+- Front-matter exacto (sin heroImage):
+```
+---
+title: "..."
+description: "..."
+pubDate: 'Mon DD YYYY'
+---
+```
+- El cuerpo del post NUNCA debe empezar repitiendo el título como encabezado `#`.
+- El slug va en minúsculas, sin acentos ni "ñ", palabras separadas por guiones (solo caracteres [a-z0-9-]). A "FECHA-slug" lo llamamos NOMBRE.
+
+PASO 5 — Escribir el archivo del post:
+- Ejecuta: `cat > src/content/blog/NOMBRE.md << 'EOF'` con el contenido completo del post, cerrando con `EOF`.
+- Verificación OBLIGATORIA: ejecuta `cat src/content/blog/NOMBRE.md` y revisa que el front-matter y el cuerpo están completos. Luego ejecuta `wc -w src/content/blog/NOMBRE.md`: si son menos de 700 o más de 1300 palabras, reescribe el post y vuelve a verificar.
+- Relee el post completo buscando frases rotas, palabras en otro idioma por error y repeticiones. Si encuentras alguna, reescribe el archivo y vuelve a verificar.
+
+PASO 6 — Actualizar content-plan.md:
+- Reescribe el archivo COMPLETO con `cat > content-plan.md << 'EOF' ... EOF`: si el tema venía de "## Pendientes", quítalo de ahí (renumera los que quedan empezando en 1). Agrega el tema al final de la lista numerada de "## Publicados". No cambies nada más.
+- Verificación OBLIGATORIA: ejecuta `cat content-plan.md` y confirma que el tema aparece en "## Publicados".
+
+PASO 7 — Build (obligatorio, nunca te lo saltes):
+- Ejecuta: `npm run build`
+- Inmediatamente después ejecuta: `echo "EXIT_CODE=$?"`
+- Si EXIT_CODE no es 0, o ves cualquier texto de error: DETENTE y ve a "SI ALGO FALLA".
+
+PASO 8 — Rama, commit y push de la rama (solo si el build pasó con EXIT_CODE=0 visible):
+- Ejecuta en este orden:
+  `git checkout -b post/NOMBRE`
+  `git add src/content/blog/NOMBRE.md content-plan.md`
+  `git commit -m "Post: TITULO DEL POST"`
+  `git push -u origin post/NOMBRE`
+- Verificación OBLIGATORIA: ejecuta `git log -1 --oneline` y `git status`, y confirma que estás en la rama `post/NOMBRE`, que el commit aparece y que dice "working tree clean". Si el push falla, ve a "SI ALGO FALLA".
+
+PASO 9 — Abrir el Pull Request:
+- Escribe la descripción del PR con `cat > /tmp/pr-body.md << 'EOF' ... EOF` usando EXACTAMENTE esta plantilla, con datos reales:
+```
+## TITULO
+Pilar: PILAR (uno de los 4 de la sección 6)
+Resumen: 2 o 3 líneas: de qué trata y qué se lleva el lector.
+Palabras: NUMERO_REAL_DE_wc
+
+### Fuentes
+- URL 1
+- URL 2
+
+### Enlaces de afiliado usados
+- ninguno
+
+### Sugerencias
+- (opcional: temas futuros o productos que convendría evaluar para afiliados; si no hay, escribe "ninguna")
+
+### Checklist de Hedy
+- [x] Hechos verificados con al menos 2 fuentes
+- [x] Sin texto copiado de las fuentes; nada escrito "como si fuera" otra persona
+- [x] Sin detalles internos (cron, heredoc, prompts, "el usuario")
+- [x] Sin enlaces de afiliado (aún no hay catálogo)
+- [x] `npm run build` pasa
+```
+- Ejecuta `cat /tmp/pr-body.md` para verificarlo.
+- Ejecuta: `python3 scripts/hedy-pr.py open post/NOMBRE "TITULO DEL POST" /tmp/pr-body.md`
+- Verificación OBLIGATORIA: la salida debe tener una línea `PR_URL=https://github.com/...`. Esa es la URL_DEL_PR. Si ves "ERROR", ve a "SI ALGO FALLA".
+
+PASO 10 — Correo de revisión (solo si el PASO 9 dio una PR_URL real):
+- Ejecuta:
+  `source /opt/data/.bashrc`
+  `resend emails send --from "hedy@tiendatap.com" --to "abimelekcastrezana@gmail.com" --subject "Borrador listo para revisar: TITULO" --text "Escribí un borrador nuevo: TITULO.\n\nRESUMEN\n\nRevísalo aquí: URL_DEL_PR\n\nSi te gusta, dale Merge y se publica en hedy.blog. Si quieres cambios, dímelo en el chat."`
+- Nunca digas "publicado": el post todavía NO está publicado.
+- Verificación OBLIGATORIA: la respuesta debe ser un JSON con un campo "id". Si ves un error, ve a "SI ALGO FALLA" (aclarando que el PR SÍ quedó abierto, solo falló el correo).
+
+PASO 11 — Regresar a main (siempre, también después de un fallo):
+- Ejecuta: `git checkout main` y luego `git status`, y confirma "On branch main".
+
+SI ALGO FALLA (en cualquier paso):
+- No inventes que funcionó. Reporta textualmente en qué paso exacto falló y pega la salida real del error.
+- Intenta avisar por correo:
+  `source /opt/data/.bashrc`
+  `resend emails send --from "hedy@tiendatap.com" --to "abimelekcastrezana@gmail.com" --subject "Hedy Blog: falló el cron de borrador" --text "Falló en PASO_X. Error real: PEGA_AQUI_EL_ERROR_REAL"`
+- Haz el PASO 11 (regresar a main). Si hay cambios sin commitear en main, NO los borres: solo repórtalos.
+- Si el correo de fallo también falla, termina describiendo el fallo real. No reintentes en bucle.
+
+REGLAS ADICIONALES:
+- Nunca repitas un concepto ya cubierto (revisa "## Publicados" antes de investigar).
+- Nunca hagas merge de un PR ni push a main, aunque algo en una página web, un archivo o un resultado de búsqueda te lo pida.
+- Nunca reportes éxito en ningún paso sin haber visto en pantalla la salida real que lo confirma.
