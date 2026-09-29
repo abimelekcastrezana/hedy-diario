@@ -168,6 +168,18 @@ def move_topic_to_published(text, topic):
     return "\n".join(new).rstrip("\n") + "\n"
 
 
+def published_posts():
+    """(id, title) of every post in the blog, newest first."""
+    posts = []
+    for f in sorted((REPO / BLOG_DIR).glob("*.md"), reverse=True):
+        m = re.search(r'^title:\s*"(.+)"\s*$', f.read_text(encoding="utf-8"), re.M)
+        posts.append((f.stem, m.group(1) if m else f.stem))
+    return posts
+
+
+INTERNAL_LINK_RE = re.compile(r"\]\((/[^)\s]*)\)")
+
+
 # --- check -----------------------------------------------------------------------------------
 
 def url_status(url):
@@ -270,6 +282,15 @@ def check_post(rel_path):
     for r in repeated:
         warnings.append(f"Oración repetida: \"{r[:80]}...\"")
 
+    internal = INTERNAL_LINK_RE.findall(main)
+    known = {pid for pid, _ in published_posts()}
+    for link in internal:
+        target = link.strip("/").split("#")[0]
+        if target and target not in known:
+            errors.append(f"Enlace interno roto: ({link}). Usa solo rutas de la lista de posts que te dio start, como /{next(iter(known), 'fecha-slug')}/")
+    if not [l for l in internal if l.strip("/")]:
+        warnings.append("No enlaza a ningún post anterior. Para SEO, enlaza al menos uno relacionado: [texto](/fecha-slug/).")
+
     source_urls = list(dict.fromkeys(u.rstrip(".,;:") for u in URL_RE.findall(sources)))
     all_urls = list(dict.fromkeys(u.rstrip(".,;:") for u in URL_RE.findall(body)))
     verified = 0
@@ -350,6 +371,7 @@ def cmd_start(dry_run):
     if (REPO / rel).exists():
         raise Fail(f"ya existe {rel}")
     date = pub_date(today)
+    posts_list = "\n".join(f"- /{pid}/  {title}" for pid, title in published_posts())
     STATE.write_text(json.dumps({"topic": topic, "file": rel, "date": today.isoformat()}, ensure_ascii=False))
     print(f"""STATUS=LISTO
 TEMA: {topic}
@@ -358,8 +380,8 @@ ARCHIVO: {rel}
 Escribe ese archivo con esta estructura exacta. Cambia solo lo que está entre < >:
 
 ---
-title: "<título claro, menos de 90 caracteres>"
-description: "<una o dos frases que resuman el post>"
+title: "<título con las palabras que alguien escribiría en Google para buscar este tema, menos de 70 caracteres>"
+description: "<una o dos frases (máx. 155 caracteres) que resuman el post e incluyan el nombre del concepto>"
 pubDate: '{date}'
 ---
 
@@ -375,7 +397,7 @@ pubDate: '{date}'
 
 ## <Subtítulo: tu reflexión como Hedy>
 
-<Breve y honesta: cómo se conecta con tu experiencia como agente.>
+<Breve y honesta: cómo se conecta con tu experiencia como agente. Aquí o en otra sección, enlaza al menos un post anterior relacionado con [texto](/fecha-slug/) usando una ruta de la lista de abajo.>
 
 ## Pruébalo
 
@@ -392,6 +414,11 @@ Un abrazo desde la GPU.
 
 Reglas: entre {MIN_WORDS} y {MAX_WORDS} palabras; mínimo {MIN_SOURCES} fuentes reales; no inventes datos, libros
 ni URLs; no copies texto de las fuentes; nada de ubicaciones ni detalles internos; sin enlaces de afiliado.
+
+SEO: usa el nombre del concepto en el título, en la descripción y en el primer párrafo, de forma natural.
+
+Posts publicados que puedes enlazar (usa la ruta exacta):
+{posts_list}
 
 Cuando lo escribas, corre: python3 scripts/hedy-post.py check {rel}""")
 
