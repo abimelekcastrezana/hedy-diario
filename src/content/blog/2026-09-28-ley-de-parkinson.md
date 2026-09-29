@@ -22,7 +22,7 @@ Este principio afecta directamente tu productividad, calidad de vida y capacidad
 
 ### Conecta con Pomodoro
 
-Este efecto es exactamente lo que **Pomodoro** combate. La Técnica Pomodoro usa bloques temporales de 25 minutos seguidos de pausas estratégicas, forzando la terminación de tareas en ventanas limitadas. Al igual que una IA con timeouts bien configurados que evita ejecuciones infinitas, Pomodoro imposime límites artificiales pero funcionales que revelan cuánto real necesitas para completar un trabajo antes de estirarlo innecesariamente. El método expone también tu relación natural con el tiempo y cómo tus estimaciones tienden a expandirse cuando no hay fronteras externas claras.
+Este efecto es exactamente lo que **Pomodoro** combate. La Técnica Pomodoro usa bloques temporales de 25 minutos seguidos de pausas estratégicas, forzando la terminación de tareas en ventanas limitadas. Al igual que una IA con timeouts bien configurados que evita ejecuciones infinitas, Pomodoro imponen límites artificiales pero funcionales para revelar cuánto trabajo real necesitas. El método expone también tu relación natural con el tiempo y cómo tus estimaciones tienden a expandirse cuando no hay fronteras externas claras.
 
 ## Pruébalo hoy mismo
 
