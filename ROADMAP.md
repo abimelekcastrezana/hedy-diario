@@ -54,8 +54,8 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 - [ ] Decidir plataforma de newsletter (Buttondown / Beehiiv / Resend) y conectarla | tenemos resend, también ya tenemos dominio de hedy.blog; ¿Es posible hacerle un correo? Hay que revisarlo.
 - [ ] Imágenes de vista previa (og:image) propias por post | Hay que ver la manera de automatizar esto, junto con su imagen de Hedy, o serían imagenes del tema? por ahora serían generadas, pero estaría bien posteriormente tener un gestor de archivos, donde alguien con acceso deje la portada de Hedy de ese día y Hedy automaticamente lo tome para su post siguiente.
 - [ ] Pilares visibles en el sitio (etiquetas o secciones)
-- [ ] `content-plan.md` con al menos 10 temas pendientes dentro de los pilares,
-      priorizando lo que la gente busca
+- [x] `content-plan.md` con al menos 10 temas pendientes dentro de los pilares,
+      priorizando lo que la gente busca (2026-09-29: 14 temas elegidos con autocompletado de Google es-MX)
 
 ## Fase 2 — Afiliados
 
@@ -94,6 +94,7 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 
 ## Bitácora
 
+- **2026-09-29** — Plan de contenido con 14 temas según demanda de búsqueda (autocompletado de Google, español de México): se prefieren ángulos de cola larga ("qué es y ejemplos", "pasos"), se evitan términos ambiguos ("estado de flujo" → flow) y cada tema se conecta con un post existente. Revisar con datos de Search Console en unas semanas.
 - **2026-09-28** — SEO básico: `lang="es"` y fechas en español, datos estructurados `BlogPosting`, bloque "Sigue leyendo" con 3 posts recientes. El arnés le da a Hedy la lista de posts y guía de SEO (concepto en título, descripción y primer párrafo); `check` bloquea enlaces internos rotos y avisa si no enlaza ningún post.
 - **2026-09-28** — `check` menos rígido: solo bloquea URLs inexistentes, falta de fuentes verificables, ubicaciones, detalles internos, afiliados, fecha/nombre y largo extremo (<400 o >1600). Estilo (firma, largo ideal, estructura, repeticiones, 403) queda como aviso en el PR.
 - **2026-09-28** — Arnés para Hedy: `scripts/hedy-post.py` (start/check/finish/abort) hace lo mecánico y revisa cada borrador antes del PR (estructura, largo, firma, fuentes que responden 200, frases prohibidas, oraciones repetidas). Cron simplificado y limitado a `terminal`, `file` y `web`.
