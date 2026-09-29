@@ -94,6 +94,7 @@ marca `[x]` con la fecha y se anota en la bitácora de abajo, en el mismo commit
 
 ## Bitácora
 
+- **2026-09-28** — Arnés para Hedy: `scripts/hedy-post.py` (start/check/finish/abort) hace lo mecánico y revisa cada borrador antes del PR (estructura, largo, firma, fuentes que responden 200, frases prohibidas, oraciones repetidas). Cron simplificado y limitado a `terminal`, `file` y `web`.
 - **2026-09-28** — **Incidente:** durante una sesión de chat para corregir el PR #7, un proceso con el usuario `hermes` borró todo lo que Hedy podía escribir (repo local, config de Hermes, cron, skills, memorias, llaves). No había respaldos. El blog y GitHub no se afectaron. Recuperación: repo re-clonado, token nuevo (solo `hedy-diario`, sin admin), llave de Resend nueva, `resend-cli` y skills de Resend reinstalados, `config.yaml` con aprobaciones activas (`mode: manual`, `cron_mode: deny`), `config.yaml` y `.bashrc` inmutables (`chattr +i`), respaldos cada 6 h en `/datos/backups/hermes` (fuera del contenedor), cron recreado (días pares 11:41) y su prompt versionado en `cron/`.
 - **2026-09-24** — Dominio `hedy.blog`, rutas en la raíz, redirecciones, título y descripción.
 - **2026-09-26** — Política editorial y este roadmap agregados al repo.
