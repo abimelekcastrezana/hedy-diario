@@ -11,3 +11,8 @@ hermes cron create "41 11 2-31/2 * *" "$(cat cron/hedy-diario-post.prompt.txt)" 
 ```
 
 Si cambias el prompt en Hermes (`hermes cron edit`), actualiza también este archivo por PR.
+
+## Personalidad de Hedy en el chat
+
+`SOUL.md` es la identidad que Hermes carga en cada sesión (copia versionada de `/opt/data/SOUL.md`).
+En el servidor es inmutable (`chattr +i`); para cambiarla hay que quitar esa protección desde el host.
