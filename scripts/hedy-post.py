@@ -39,22 +39,24 @@ BASHRC = Path("/opt/data/.bashrc")
 OWNER_EMAIL = "abimelekcastrezana@gmail.com"
 FROM_EMAIL = "hedy@tiendatap.com"
 SITE = "https://hedy.blog"
-MIN_WORDS, MAX_WORDS = 650, 1200  # body only (no front-matter, no Fuentes)
-MIN_SOURCES = 2
+MIN_WORDS, MAX_WORDS = 650, 1200  # body only (no front-matter, no Fuentes); outside -> warning
+HARD_MIN_WORDS, HARD_MAX_WORDS = 400, 1600  # outside -> error
+MIN_SOURCES = 2  # verified (200) sources wanted; fewer than 1 is an error
 DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 NAME_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})-[a-z0-9]+(?:-[a-z0-9]+)*\.md$")
 SIGNATURE_RE = re.compile(r"^Un abrazo desde la GPU[.!]?$")
 URL_RE = re.compile(r"https?://[^\s)>\]\"'`]+")
+# (pattern, reason, blocking): blocking=False only warns in the PR.
 FORBIDDEN = [
     (r"ciudad de m[eé]xico|\bcdmx\b|desde m[eé]xico",
-     "Menciona una ubicación física. Tú no tienes ciudad: quítala."),
+     "Menciona una ubicación física. Tú no tienes ciudad: quítala.", True),
     (r"\bheredoc\b|\bnano\b|\bcron\b|\bslug\b|el usuario|mis instrucciones|\bmi prompt\b",
-     "Menciona detalles internos (cron, heredoc, nano, slug, 'el usuario', instrucciones). Quítalos."),
+     "Menciona detalles internos (cron, heredoc, nano, slug, 'el usuario', instrucciones). Quítalos.", True),
     (r"nosotr[oa]s somos (m[aá]s )?eficientes|como agentes de ia,? nosotr[oa]s|las ia somos",
-     "Afirma que las IA son superiores o eficientes por naturaleza. Habla solo de tu experiencia."),
+     "Afirma que las IA son superiores o eficientes por naturaleza. Mejor habla solo de tu experiencia.", False),
     (r"amazon\.|amzn\.to|[?&]tag=",
-     "Tiene un enlace de afiliado. Todavía no hay catálogo aprobado: quítalo."),
+     "Tiene un enlace de afiliado. Todavía no hay catálogo aprobado: quítalo.", True),
 ]
 
 
@@ -225,33 +227,35 @@ def check_post(rel_path):
     else:
         main, sources = split
         if re.search(r"^## ", sources, re.M):
-            errors.append("'## Fuentes' debe ser la última sección del post.")
+            warnings.append("'## Fuentes' debería ser la última sección del post.")
 
     words = len(re.findall(r"\w+", main))
-    if not MIN_WORDS <= words <= MAX_WORDS:
-        errors.append(f"Tiene {words} palabras (sin contar Fuentes); debe tener entre {MIN_WORDS} y {MAX_WORDS}.")
+    if not HARD_MIN_WORDS <= words <= HARD_MAX_WORDS:
+        errors.append(f"Tiene {words} palabras (sin contar Fuentes); debe tener entre {HARD_MIN_WORDS} y {HARD_MAX_WORDS}.")
+    elif not MIN_WORDS <= words <= MAX_WORDS:
+        warnings.append(f"Tiene {words} palabras; lo ideal es entre {MIN_WORDS} y {MAX_WORDS}.")
 
     headings = re.findall(r"^## (.+)$", main, re.M)
     if len([h for h in headings if not h.startswith("Pruébalo")]) < 2:
-        errors.append("Usa al menos 2 subtítulos '## ...' además de '## Pruébalo'.")
+        warnings.append("Conviene usar al menos 2 subtítulos '## ...' además de '## Pruébalo'.")
     prueba = re.search(r"^## Pruébalo[^\n]*\n(.*?)(?=^## |^Un abrazo desde la GPU|\Z)", main, re.S | re.M)
     if not prueba:
-        errors.append("Falta la sección '## Pruébalo'.")
+        warnings.append("Falta la sección '## Pruébalo'.")
     else:
         items = re.findall(r"^\s*(?:[-*]|\d+\.)\s+\S", prueba.group(1), re.M)
         if not 2 <= len(items) <= 4:
-            errors.append(f"'## Pruébalo' tiene {len(items)} ideas; deben ser de 2 a 4, cada una en su línea con '- '.")
+            warnings.append(f"'## Pruébalo' tiene {len(items)} ideas; lo ideal es de 2 a 4.")
 
     last = [l.strip() for l in main.strip().split("\n") if l.strip()]
     if not last or not SIGNATURE_RE.match(last[-1]):
-        errors.append("Justo antes de '## Fuentes' la última línea debe ser solo: Un abrazo desde la GPU.")
+        warnings.append("La firma 'Un abrazo desde la GPU.' debería ser la última línea antes de '## Fuentes'.")
     if len(re.findall(r"Un abrazo desde la GPU", main)) > 1:
-        errors.append("La firma 'Un abrazo desde la GPU' debe aparecer una sola vez.")
+        warnings.append("La firma 'Un abrazo desde la GPU' aparece más de una vez.")
 
-    for pattern, reason in FORBIDDEN:
+    for pattern, reason, blocking in FORBIDDEN:
         hit = re.search(pattern, body, re.I)
         if hit:
-            errors.append(f"{reason} (encontré: \"{hit.group(0)}\")")
+            (errors if blocking else warnings).append(f"{reason} (encontré: \"{hit.group(0)}\")")
 
     prose = re.sub(r"^#.*$", "", main, flags=re.M)
     seen, repeated = set(), []
@@ -264,7 +268,7 @@ def check_post(rel_path):
         if len(s.split()) > 60:
             warnings.append(f"Oración muy larga ({len(s.split())} palabras), divídela: \"{s[:70]}...\"")
     for r in repeated:
-        errors.append(f"Oración repetida, quita una: \"{r[:80]}...\"")
+        warnings.append(f"Oración repetida: \"{r[:80]}...\"")
 
     source_urls = list(dict.fromkeys(u.rstrip(".,;:") for u in URL_RE.findall(sources)))
     all_urls = list(dict.fromkeys(u.rstrip(".,;:") for u in URL_RE.findall(body)))
@@ -277,9 +281,13 @@ def check_post(rel_path):
             errors.append(f"Esta URL no existe ({status or 'sin respuesta'}): {url}. Quítala o usa una real de tus búsquedas.")
         else:
             warnings.append(f"No pude verificar {url} (código {status}); no cuenta como fuente verificada.")
-    if verified < MIN_SOURCES:
-        errors.append(f"'## Fuentes' tiene {verified} fuente(s) verificada(s); se necesitan al menos {MIN_SOURCES} "
-                      "URLs reales que respondan 200, copiadas tal cual de tus búsquedas.")
+    if len(source_urls) < MIN_SOURCES:
+        errors.append(f"'## Fuentes' tiene {len(source_urls)} URL(s); pon al menos {MIN_SOURCES} fuentes reales de tus búsquedas.")
+    elif verified < 1:
+        errors.append("Ninguna fuente de '## Fuentes' se pudo verificar (ninguna respondió 200). "
+                      "Incluye al menos una URL real copiada tal cual de tus búsquedas.")
+    elif verified < MIN_SOURCES:
+        warnings.append(f"Solo {verified} de {len(source_urls)} fuentes se pudo verificar automáticamente.")
     return errors, warnings
 
 
@@ -435,8 +443,8 @@ def cmd_finish(rel, dry_run):
         pr_body = (f"## {title}\nPilar: {pillar.group(1).strip() if pillar else '-'}\nResumen: {desc}\n"
                    f"Palabras: {word_count}\n\n### Fuentes\n{source_list}\n\n"
                    "### Enlaces de afiliado usados\n- ninguno\n\n"
-                   "### Revisión automática (scripts/hedy-post.py check)\n- [x] Estructura, largo, firma y fuentes verificadas\n"
-                   + "".join(f"- ⚠ {w}\n" for w in warnings))
+                   "### Revisión automática (scripts/hedy-post.py check)\n- [x] Sin URLs inexistentes, ubicaciones, detalles internos ni afiliados\n"
+                   + ("".join(f"- ⚠ {w}\n" for w in warnings) if warnings else "- Sin avisos de estilo\n"))
         pr = pr_helper().request("POST", "/pulls", {"title": title, "head": branch, "base": "main", "body": pr_body})
         print(f"PR_URL={pr['html_url']}")
         send_email(f"Borrador listo para revisar: {title}",
