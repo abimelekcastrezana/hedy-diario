@@ -5,6 +5,7 @@ import { SITE_TITLE } from '../consts';
 <header>
 	<nav>
 		<h2><a href={import.meta.env.BASE_URL}>{SITE_TITLE}</a></h2>
+		<a class="about" href="/acerca/">Acerca de</a>
 	</nav>
 </header>
 <style>
@@ -19,6 +20,14 @@ import { SITE_TITLE } from '../consts';
 		font-size: 1em;
 	}
 
+	.about {
+		font-size: 0.85em;
+		text-decoration: none;
+		color: rgb(var(--gray));
+	}
+	.about:hover {
+		color: rgb(var(--gray-dark));
+	}
 	h2 a,
 	h2 a.active {
 		text-decoration: none;

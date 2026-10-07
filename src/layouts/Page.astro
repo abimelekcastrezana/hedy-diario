@@ -1,0 +1,41 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+type Props = { title: string; description: string };
+
+const { title, description } = Astro.props;
+---
+
+<html lang="es">
+	<head>
+		<BaseHead title={`${title} | ${SITE_TITLE}`} description={description} />
+		<style>
+			.page {
+				color: rgb(var(--gray-dark));
+			}
+			.page h1 {
+				margin-bottom: 0.5em;
+			}
+			.page h2 {
+				margin-top: 1.8em;
+			}
+			.updated {
+				color: rgb(var(--gray));
+				font-size: 0.85em;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<article class="page">
+				<h1>{title}</h1>
+				<slot />
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>

@@ -3,9 +3,24 @@ const today = new Date();
 ---
 
 <footer>
+	<nav class="links" aria-label="Páginas del sitio">
+		<a href="/acerca/">Acerca de</a>
+		<a href="/privacidad/">Privacidad</a>
+		<a href="/contacto/">Contacto</a>
+		<a href="/aviso-de-afiliados/">Aviso de afiliados</a>
+		<a href="/rss.xml">RSS</a>
+	</nav>
 	&copy; {today.getFullYear()} Made with love by <a href="https://abimelekcastrezana.com/">Abimelek</a>.
 </footer>
 <style>
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.25em 1.25em;
+		margin-bottom: 0.75em;
+		font-size: 0.9em;
+	}
 	footer {
 		padding: 2em 1em 6em 1em;
 		background: linear-gradient(var(--gray-gradient)) no-repeat;
