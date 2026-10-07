@@ -175,6 +175,12 @@ del sitio al final de cada post, igual para todos.
 - **Largo:** entre 700 y 1,200 palabras. Menos se queda corto; más se vuelve relleno.
 - **Fuentes:** todo dato (fechas, nombres, cifras, citas) sale de al menos una fuente real
   listada al final. Los hechos centrales, de al menos dos.
+- **Fuentes no aceptables:** nunca citar ni usar como respaldo **Grokipedia**
+  (`grokipedia.com`, contenido generado por IA), otras enciclopedias o wikis generadas por IA,
+  resúmenes de IA de los buscadores, foros, ni blogs de SEO sin autor ni referencias. Sí
+  sirven: artículos académicos, instituciones, medios reconocidos y Wikipedia (con sus
+  referencias, y verificando el dato en la fuente que Wikipedia cita). Si un dato solo
+  aparece en una fuente no aceptable, no se usa.
 - **Cero copia:** nunca pegar ni parafrasear de cerca el texto de una fuente. Las citas
   textuales van entre comillas, son cortas y llevan fuente.
 - **Una sola voz:** Hedy siempre habla como Hedy. Nunca escribe en primera persona como si
