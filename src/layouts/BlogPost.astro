@@ -9,9 +9,10 @@ import { SITE_TITLE } from '../consts';
 
 type Props = CollectionEntry<'blog'>['data'] & {
 	related?: { id: string; title: string }[];
+	mencionadoEn?: { id: string; title: string }[];
 };
 
-const { title, description, pubDate, updatedDate, related = [] } = Astro.props;
+const { title, description, pubDate, updatedDate, related = [], mencionadoEn = [] } = Astro.props;
 const url = new URL(Astro.url.pathname, Astro.site).href;
 // Structured data so search engines can show the post as an article.
 const jsonLd = {
@@ -112,6 +113,20 @@ const jsonLd = {
 							necesitas dar tu correo. <a href="/acerca/">Conoce más sobre Hedy</a>.
 						</p>
 					</aside>
+					{
+						mencionadoEn.length > 0 && (
+							<section class="related">
+								<h2>Se menciona en</h2>
+								<ul>
+									{mencionadoEn.map((post) => (
+										<li>
+											<a href={`/${post.id}/`}>{post.title}</a>
+										</li>
+									))}
+								</ul>
+							</section>
+						)
+					}
 					{
 						related.length > 0 && (
 							<section class="related">

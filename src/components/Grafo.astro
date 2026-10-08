@@ -1,0 +1,323 @@
+---
+import { PILARES, getGrafo } from '../lib/grafo';
+
+type Props = { height?: number };
+const { height = 360 } = Astro.props;
+
+const { nodos, enlaces } = await getGrafo();
+const pilaresUsados = [...new Set(nodos.map((n) => n.pilar))];
+// Posición inicial en círculo: es lo que ven los navegadores sin JavaScript. El script la reemplaza por la simulación.
+const W = 800;
+const pos = Object.fromEntries(
+	nodos.map((n, i) => {
+		const a = (i / nodos.length) * Math.PI * 2 - Math.PI / 2;
+		return [n.id, { x: W / 2 + Math.cos(a) * W * 0.32, y: height / 2 + Math.sin(a) * height * 0.34 }];
+	}),
+);
+const etiqueta = (t: string) => (t.length > 30 ? t.slice(0, 29).trimEnd() + '…' : t);
+const datos = JSON.stringify({ nodos, enlaces, pilares: pilaresUsados });
+---
+
+<figure class="grafo" class:list={{ 'sin-etiquetas': nodos.length > 30 }} style={`--alto:${height}px`}>
+	<svg role="group" aria-label="Mapa de posts del blog conectados por enlaces" viewBox={`0 0 ${W} ${height}`}>
+		<g class="aristas">
+			{
+				enlaces.map((e) => (
+					<line
+						data-s={e.source}
+						data-t={e.target}
+						x1={pos[e.source].x}
+						y1={pos[e.source].y}
+						x2={pos[e.target].x}
+						y2={pos[e.target].y}
+					/>
+				))
+			}
+		</g>
+		<g class="nodos">
+			{
+				nodos.map((n) => (
+					<a class="nodo" href={n.url} data-id={n.id} aria-label={n.title}>
+						<title>{n.title}</title>
+						<circle cx={pos[n.id].x} cy={pos[n.id].y} r={n.r} fill={PILARES[n.pilar].color} />
+						<text x={pos[n.id].x} y={pos[n.id].y + n.r + 14} text-anchor="middle">
+							{etiqueta(n.title)}
+						</text>
+					</a>
+				))
+			}
+		</g>
+	</svg>
+	<figcaption>
+		<ul class="leyenda">
+			{
+				pilaresUsados.map((p) => (
+					<li>
+						<span class="punto" style={`background:${PILARES[p].color}`} />
+						{PILARES[p].nombre}
+					</li>
+				))
+			}
+		</ul>
+		<span class="ayuda">Cada punto es un post; las líneas son enlaces entre ellos. Arrastra, toca o haz clic.</span>
+	</figcaption>
+	<script type="application/json" class="grafo-datos" set:html={datos} />
+</figure>
+
+<style>
+	.grafo {
+		margin: 0;
+	}
+	svg {
+		display: block;
+		width: 100%;
+		height: var(--alto);
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 12px;
+		background: radial-gradient(circle at 50% 40%, #fff, rgb(var(--gray-light)));
+		touch-action: pan-y;
+	}
+	line {
+		stroke: rgb(var(--gray));
+		stroke-opacity: 0.55;
+		stroke-width: 1.8;
+		transition: stroke 0.15s, stroke-opacity 0.15s;
+	}
+	.nodo {
+		cursor: pointer;
+		outline: none;
+		transition: opacity 0.15s;
+	}
+	.nodo circle {
+		stroke: #fff;
+		stroke-width: 2;
+		transition: stroke 0.15s;
+	}
+	.nodo text {
+		font-size: 12px;
+		fill: rgb(var(--gray-dark));
+		paint-order: stroke;
+		stroke: #fff;
+		stroke-width: 3px;
+		pointer-events: none;
+	}
+	.sin-etiquetas .nodo text {
+		opacity: 0;
+	}
+	.sin-etiquetas .nodo:hover text,
+	.sin-etiquetas .nodo:focus-visible text,
+	.sin-etiquetas .nodo.activo text {
+		opacity: 1;
+	}
+	.nodo:focus-visible circle,
+	.nodo:hover circle {
+		stroke: var(--accent);
+	}
+	.hay-foco .nodo:not(.activo) {
+		opacity: 0.22;
+	}
+	.hay-foco line:not(.activa) {
+		stroke-opacity: 0.08;
+	}
+	.hay-foco line.activa {
+		stroke: var(--accent);
+		stroke-opacity: 0.9;
+		stroke-width: 2;
+	}
+	figcaption {
+		margin: 0.6em 0 1.5em;
+		font-size: 0.8em;
+		color: rgb(var(--gray));
+	}
+	.leyenda {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25em 1.1em;
+		margin: 0 0 0.2em;
+		padding: 0;
+		list-style: none;
+	}
+	.punto {
+		display: inline-block;
+		width: 0.7em;
+		height: 0.7em;
+		margin-right: 0.35em;
+		border-radius: 50%;
+	}
+</style>
+
+<script>
+	// Simulación de fuerzas mínima, sin dependencias: repulsión entre nodos, resortes en los enlaces
+	// y una atracción suave hacia el "ancla" de su pilar para que se formen grupos.
+	const fig = document.querySelector<HTMLElement>('.grafo');
+	const svg = fig?.querySelector('svg');
+	const crudo = fig?.querySelector('.grafo-datos')?.textContent;
+	if (fig && svg && crudo) {
+		const data = JSON.parse(crudo) as {
+			nodos: { id: string; r: number; pilar: string }[];
+			enlaces: { source: string; target: string }[];
+			pilares: string[];
+		};
+		const NS = 'http://www.w3.org/2000/svg';
+		type N = { id: string; r: number; pilar: string; x: number; y: number; vx: number; vy: number; fijo: boolean; el: Element; c: Element; t: Element };
+		const porId = new Map<string, N>();
+		const nodos: N[] = data.nodos.map((n) => {
+			const el = svg.querySelector(`.nodo[data-id="${CSS.escape(n.id)}"]`)!;
+			const o: N = { ...n, x: 0, y: 0, vx: 0, vy: 0, fijo: false, el, c: el.querySelector('circle')!, t: el.querySelector('text')! };
+			porId.set(n.id, o);
+			return o;
+		});
+		const lineas = [...svg.querySelectorAll('line')].map((l) => ({
+			el: l,
+			a: porId.get(l.getAttribute('data-s')!)!,
+			b: porId.get(l.getAttribute('data-t')!)!,
+		}));
+		const vecinos = new Map<string, Set<string>>(nodos.map((n) => [n.id, new Set([n.id])]));
+		data.enlaces.forEach((e) => {
+			vecinos.get(e.source)!.add(e.target);
+			vecinos.get(e.target)!.add(e.source);
+		});
+
+		let W = 800;
+		let H = 360;
+		let alpha = 1;
+		let corriendo = false;
+		const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const ancla = (p: string) => {
+			const i = data.pilares.indexOf(p);
+			const a = (i / data.pilares.length) * Math.PI * 2 - Math.PI / 2;
+			return data.pilares.length === 1 ? { x: W / 2, y: H / 2 } : { x: W / 2 + Math.cos(a) * W * 0.3, y: H / 2 + Math.sin(a) * H * 0.3 };
+		};
+
+		function pintar() {
+			for (const n of nodos) {
+				n.c.setAttribute('cx', String(n.x));
+				n.c.setAttribute('cy', String(n.y));
+				n.t.setAttribute('x', String(n.x));
+				n.t.setAttribute('y', String(n.y + n.r + 14));
+			}
+			for (const l of lineas) {
+				l.el.setAttribute('x1', String(l.a.x));
+				l.el.setAttribute('y1', String(l.a.y));
+				l.el.setAttribute('x2', String(l.b.x));
+				l.el.setAttribute('y2', String(l.b.y));
+			}
+		}
+
+		function paso() {
+			for (let i = 0; i < nodos.length; i++) {
+				for (let j = i + 1; j < nodos.length; j++) {
+					const a = nodos[i], b = nodos[j];
+					let dx = b.x - a.x, dy = b.y - a.y;
+					const d2 = dx * dx + dy * dy + 0.01;
+					const d = Math.sqrt(d2);
+					const f = (16000 * alpha) / d2 + (d < a.r + b.r + 60 ? 1.2 : 0);
+					dx /= d; dy /= d;
+					a.vx -= dx * f; a.vy -= dy * f;
+					b.vx += dx * f; b.vy += dy * f;
+				}
+			}
+			for (const l of lineas) {
+				const dx = l.b.x - l.a.x, dy = l.b.y - l.a.y;
+				const d = Math.sqrt(dx * dx + dy * dy) || 1;
+				const f = (d - 120) * 0.03;
+				l.a.vx += (dx / d) * f; l.a.vy += (dy / d) * f;
+				l.b.vx -= (dx / d) * f; l.b.vy -= (dy / d) * f;
+			}
+			for (const n of nodos) {
+				const an = ancla(n.pilar);
+				n.vx += (an.x - n.x) * 0.014 + (W / 2 - n.x) * 0.0015;
+				n.vy += (an.y - n.y) * 0.014 + (H / 2 - n.y) * 0.0015;
+				if (!n.fijo) {
+					n.vx *= 0.82; n.vy *= 0.82;
+					n.x = Math.min(W - n.r - 10, Math.max(n.r + 10, n.x + n.vx));
+					n.y = Math.min(H - n.r - 22, Math.max(n.r + 10, n.y + n.vy));
+				}
+			}
+			alpha *= 0.985;
+		}
+
+		function ciclo() {
+			paso();
+			pintar();
+			if (alpha > 0.02) requestAnimationFrame(ciclo);
+			else corriendo = false;
+		}
+		function arrancar(a = 1) {
+			alpha = Math.max(alpha, a);
+			if (reducido) {
+				for (let i = 0; i < 300; i++) paso();
+				pintar();
+			} else if (!corriendo) {
+				corriendo = true;
+				requestAnimationFrame(ciclo);
+			}
+		}
+		function iniciar() {
+			W = svg!.clientWidth || 800;
+			H = svg!.clientHeight || 360;
+			svg!.setAttribute('viewBox', `0 0 ${W} ${H}`);
+			nodos.forEach((n, i) => {
+				const an = ancla(n.pilar);
+				n.x = an.x + Math.cos(i * 2.4) * 40;
+				n.y = an.y + Math.sin(i * 2.4) * 40;
+				n.vx = n.vy = 0;
+			});
+			alpha = 1;
+			arrancar(1);
+		}
+
+		// Resaltar un nodo y sus vecinos
+		const resaltar = (id: string | null) => {
+			fig.classList.toggle('hay-foco', id !== null);
+			for (const n of nodos) n.el.classList.toggle('activo', id !== null && vecinos.get(id)!.has(n.id));
+			for (const l of lineas) l.el.classList.toggle('activa', id !== null && (l.a.id === id || l.b.id === id));
+		};
+
+		// Arrastrar nodos; un clic sin movimiento sigue el enlace
+		for (const n of nodos) {
+			let inicio: { x: number; y: number } | null = null;
+			let movido = false;
+			n.el.addEventListener('pointerenter', () => resaltar(n.id));
+			n.el.addEventListener('pointerleave', () => resaltar(null));
+			n.el.addEventListener('focus', () => resaltar(n.id));
+			n.el.addEventListener('blur', () => resaltar(null));
+			n.el.addEventListener('pointerdown', (ev) => {
+				const e = ev as PointerEvent;
+				inicio = { x: e.clientX, y: e.clientY };
+				movido = false;
+				n.fijo = true;
+				(n.el as Element).setPointerCapture?.(e.pointerId);
+			});
+			n.el.addEventListener('pointermove', (ev) => {
+				const e = ev as PointerEvent;
+				if (!inicio) return;
+				if (Math.hypot(e.clientX - inicio.x, e.clientY - inicio.y) > 5) movido = true;
+				if (!movido) return;
+				const r = svg!.getBoundingClientRect();
+				n.x = Math.min(W - n.r, Math.max(n.r, e.clientX - r.left));
+				n.y = Math.min(H - n.r, Math.max(n.r, e.clientY - r.top));
+				arrancar(0.3);
+				pintar();
+			});
+			n.el.addEventListener('pointerup', () => {
+				inicio = null;
+				n.fijo = false;
+				arrancar(0.3);
+			});
+			n.el.addEventListener('click', (e) => {
+				if (movido) e.preventDefault();
+				movido = false;
+			});
+		}
+
+		let ancho = svg.clientWidth;
+		new ResizeObserver(() => {
+			if (Math.abs(svg.clientWidth - ancho) > 40) {
+				ancho = svg.clientWidth;
+				iniciar();
+			}
+		}).observe(svg);
+		iniciar();
+	}
+</script>

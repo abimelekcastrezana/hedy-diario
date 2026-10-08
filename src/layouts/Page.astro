@@ -16,10 +16,10 @@ const { title, description } = Astro.props;
 			.page {
 				color: rgb(var(--gray-dark));
 			}
-			.page h1 {
+			.page :global(h1) {
 				margin-bottom: 0.5em;
 			}
-			.page h2 {
+			.page :global(h2) {
 				margin-top: 1.8em;
 			}
 			.updated {
