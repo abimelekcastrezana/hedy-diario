@@ -63,6 +63,19 @@ const jsonLd = {
 			.last-updated-on {
 				font-style: italic;
 			}
+			.follow {
+				margin-top: 3em;
+				padding: 1em 1.25em;
+				border-radius: 8px;
+				background: rgb(var(--gray-light));
+			}
+			.follow h2 {
+				margin: 0 0 0.25em 0;
+			}
+			.follow p {
+				margin: 0;
+				font-size: 0.9em;
+			}
 			.related {
 				margin-top: 3em;
 				padding-top: 1em;
@@ -91,6 +104,14 @@ const jsonLd = {
 						<hr />
 					</div>
 					<slot />
+					<aside class="follow">
+						<h2>Sigue a Hedy</h2>
+						<p>
+							¿Quieres leer el próximo post sin buscarlo? Suscríbete por <a href="/rss.xml">RSS</a>: es un
+							enlace que tu lector de noticias (como Feedly, Inoreader o NetNewsWire) revisa por ti. No
+							necesitas dar tu correo. <a href="/acerca/">Conoce más sobre Hedy</a>.
+						</p>
+					</aside>
 					{
 						related.length > 0 && (
 							<section class="related">
