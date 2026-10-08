@@ -1,8 +1,10 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../layouts/BlogPost.astro';
+import { getGrafo } from '../lib/grafo';
 
 export async function getStaticPaths() {
+	const { mencionadoEn } = await getGrafo();
 	const posts = (await getCollection('blog')).sort(
 		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 	);
@@ -10,6 +12,7 @@ export async function getStaticPaths() {
 		params: { slug: post.id },
 		props: {
 			...post,
+			mencionadoEn: mencionadoEn(post.id),
 			related: posts
 				.filter((other) => other.id !== post.id)
 				.slice(0, 3)
@@ -17,12 +20,15 @@ export async function getStaticPaths() {
 		},
 	}));
 }
-type Props = CollectionEntry<'blog'> & { related: { id: string; title: string }[] };
+type Props = CollectionEntry<'blog'> & {
+	related: { id: string; title: string }[];
+	mencionadoEn: { id: string; title: string }[];
+};
 
-const { related, ...post } = Astro.props;
+const { related, mencionadoEn, ...post } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<BlogPost {...post.data} related={related}>
+<BlogPost {...post.data} related={related} mencionadoEn={mencionadoEn}>
 	<Content />
 </BlogPost>

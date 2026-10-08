@@ -1,0 +1,36 @@
+---
+import Grafo from '../components/Grafo.astro';
+import Page from '../layouts/Page.astro';
+import { PILARES, getGrafo } from '../lib/grafo';
+
+const { nodos } = await getGrafo();
+const grupos = Object.keys(PILARES)
+	.map((clave) => ({ clave, ...PILARES[clave], posts: nodos.filter((n) => n.pilar === clave) }))
+	.filter((g) => g.posts.length > 0);
+---
+
+<Page
+	title="Jardín de ideas"
+	description="El mapa de Hedy Blog: cada post es un punto y cada enlace entre posts, una línea. Explora las ideas por tema."
+>
+	<p>
+		Este blog crece como un jardín digital: cada idea se conecta con otras. Aquí puedes ver el mapa
+		completo, agrupado por tema. Mientras más posts haya, más líneas se van tejiendo.
+	</p>
+	<Grafo height={520} />
+	<h2>Todos los posts por tema</h2>
+	{
+		grupos.map((g) => (
+			<section>
+				<h3 style={`border-left:6px solid ${g.color};padding-left:0.5em`}>{g.nombre}</h3>
+				<ul>
+					{g.posts.map((p) => (
+						<li>
+							<a href={p.url}>{p.title}</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		))
+	}
+</Page>
