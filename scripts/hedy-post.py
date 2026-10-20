@@ -3,7 +3,8 @@
 
 Usage (from the repo root):
   python3 scripts/hedy-post.py start [--dry-run]
-      Syncs main, checks for a pending draft PR, picks the next topic from content-plan.md
+      Moves untracked leftovers of a failed run (content/, src/content/blog/) to borradores-fallidos,
+      syncs main, checks for a pending draft PR, picks the next topic from content-plan.md
       and prints the exact file name, date and template the agent must write.
   python3 scripts/hedy-post.py check <archivo.md>
       Validates a draft (structure, length, sources that really exist, forbidden phrases,
@@ -35,6 +36,9 @@ STATE = REPO / ".git" / "hedy-post.json"
 PLAN = REPO / "content-plan.md"
 BLOG_DIR = "src/content/blog"
 FAILED_DIR = Path("/apps-hermes/borradores-fallidos")
+# Untracked leftovers under these paths come from a failed run (the agent wrote in the wrong
+# place or never finished). start moves them to FAILED_DIR instead of blocking forever.
+STRAY_PREFIXES = ("content/", f"{BLOG_DIR}/")
 BASHRC = Path("/opt/data/.bashrc")
 OWNER_EMAIL = "abimelekcastrezana@gmail.com"
 FROM_EMAIL = "hedy@tiendatap.com"
@@ -336,7 +340,49 @@ def ensure_main_clean():
         git("checkout", "main")
 
 
+def quarantine_strays(dry_run):
+    """Moves untracked leftovers of a failed run to FAILED_DIR and emails what it moved.
+
+    Only untracked files under STRAY_PREFIXES; modified or tracked files and anything else
+    still make ensure_main_clean refuse. Nothing is deleted.
+    """
+    strays = [l[3:].strip('"') for l in git("status", "--porcelain", "--untracked-files=all").splitlines()
+              if l.startswith("?? ") and l[3:].strip('"').startswith(STRAY_PREFIXES)]
+    if not strays:
+        return
+    if dry_run:
+        print("(dry-run) archivos sueltos que movería a borradores-fallidos: " + ", ".join(strays))
+        return
+    FAILED_DIR.mkdir(parents=True, exist_ok=True)
+    stamp = f"{datetime.datetime.now():%Y%m%d-%H%M%S}"
+    moved = []
+    for rel in strays:
+        dest = FAILED_DIR / f"{stamp}-{rel.replace('/', '-')}"
+        shutil.move(str(REPO / rel), dest)
+        moved.append(f"{rel} -> {dest}")
+    content = REPO / "content"
+    if content.is_dir():
+        for d in sorted(content.rglob("*"), reverse=True):
+            if d.is_dir():
+                try:
+                    d.rmdir()
+                except OSError:
+                    pass
+        try:
+            content.rmdir()
+        except OSError:
+            pass
+    print("AVISO: moví archivos sueltos de una corrida anterior a borradores-fallidos:\n" + "\n".join(moved))
+    try:
+        send_email("Hedy Blog: moví archivos sueltos de una corrida fallida",
+                   "Antes de empezar encontré archivos sin guardar en git y los moví (no borré nada):\n\n"
+                   + "\n".join(moved), dry_run)
+    except Fail as e:
+        print(f"AVISO: no pude mandar el correo sobre los archivos movidos: {e}")
+
+
 def cmd_start(dry_run):
+    quarantine_strays(dry_run)
     ensure_main_clean()
     git("pull", "--ff-only", "origin", "main")
     git("fetch", "--prune", "origin")
