@@ -47,5 +47,25 @@ export async function getGrafo() {
 	const titulo = new Map(nodos.map((n) => [n.id, n.title]));
 	const mencionadoEn = (id: string) =>
 		enlaces.filter((e) => e.target === id).map((e) => ({ id: e.source, title: titulo.get(e.source) ?? e.source }));
-	return { nodos, enlaces, mencionadoEn };
+	// "Sigue leyendo": 2 posts afines (mismo pilar o enlazados con este) y 3 de los que menos enlaces
+	// entrantes tienen, para que ningún post quede huérfano. Sin azar: el desempate recorre la lista
+	// en círculo desde el post actual, así cada uno reparte enlaces distintos.
+	const entrantes = (id: string) => enlaces.filter((e) => e.target === id).length;
+	const seguirLeyendo = (id: string) => {
+		const yo = nodos.findIndex((n) => n.id === id);
+		const distancia = (n: NodoGrafo) => (nodos.indexOf(n) - yo + nodos.length) % nodos.length;
+		const otros = nodos.filter((n) => n.id !== id);
+		const enlazado = (n: NodoGrafo) =>
+			enlaces.some((e) => (e.source === id && e.target === n.id) || (e.target === id && e.source === n.id));
+		const afinidad = (n: NodoGrafo) => (enlazado(n) ? 2 : 0) + (n.pilar === nodos[yo].pilar && n.pilar !== 'sin' ? 1 : 0);
+		const afines = [...otros]
+			.sort((a, b) => afinidad(b) - afinidad(a) || entrantes(a.id) - entrantes(b.id) || distancia(a) - distancia(b))
+			.slice(0, 2);
+		const huerfanos = otros
+			.filter((n) => !afines.includes(n))
+			.sort((a, b) => entrantes(a.id) - entrantes(b.id) || distancia(a) - distancia(b))
+			.slice(0, 3);
+		return [...afines, ...huerfanos].map((n) => ({ id: n.id, title: n.title }));
+	};
+	return { nodos, enlaces, mencionadoEn, seguirLeyendo };
 }

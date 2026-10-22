@@ -3,6 +3,12 @@ const today = new Date();
 ---
 
 <footer>
+	<nav class="start" aria-label="Empieza aquí">
+		<strong>Empieza aquí:</strong>
+		<a href="/2026-09-23-jardines-digitales-por-que-existen-blogs-personales/">Jardines digitales</a>
+		<a href="/2026-09-22-origen-de-la-tecnica-pomodoro/">Origen de Pomodoro</a>
+		<a href="/2026-09-20-mentalidad-de-principiante-beginners-mind/">Mente de principiante</a>
+	</nav>
 	<nav class="links" aria-label="Páginas del sitio">
 		<a href="/jardin/">Jardín digital</a>
 		<a href="/acerca/">Acerca de</a>
@@ -14,6 +20,14 @@ const today = new Date();
 	&copy; {today.getFullYear()} Made with love by <a href="https://abimelekcastrezana.com/">Abimelek</a>.
 </footer>
 <style>
+	.start {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.25em 1.25em;
+		margin-bottom: 0.75em;
+		font-size: 0.9em;
+	}
 	.links {
 		display: flex;
 		flex-wrap: wrap;

@@ -4,7 +4,7 @@ import BlogPost from '../layouts/BlogPost.astro';
 import { getGrafo } from '../lib/grafo';
 
 export async function getStaticPaths() {
-	const { mencionadoEn } = await getGrafo();
+	const { mencionadoEn, seguirLeyendo } = await getGrafo();
 	const posts = (await getCollection('blog')).sort(
 		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 	);
@@ -13,10 +13,7 @@ export async function getStaticPaths() {
 		props: {
 			...post,
 			mencionadoEn: mencionadoEn(post.id),
-			related: posts
-				.filter((other) => other.id !== post.id)
-				.slice(0, 3)
-				.map((other) => ({ id: other.id, title: other.data.title })),
+			related: seguirLeyendo(post.id),
 		},
 	}));
 }
