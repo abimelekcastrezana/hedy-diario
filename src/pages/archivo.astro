@@ -1,0 +1,215 @@
+---
+import FormattedDate from '../components/FormattedDate.astro';
+import Page from '../layouts/Page.astro';
+import { PILARES } from '../lib/grafo';
+import { getPosts } from '../lib/posts';
+
+const posts = await getPosts();
+const empieza = [
+	'2026-09-23-jardines-digitales-por-que-existen-blogs-personales',
+	'2026-09-22-origen-de-la-tecnica-pomodoro',
+	'2026-09-20-mentalidad-de-principiante-beginners-mind',
+]
+	.map((id) => posts.find((p) => p.id === id))
+	.filter((p) => p !== undefined);
+
+const anios = [...new Set(posts.map((p) => p.pubDate.getFullYear()))].sort((a, b) => b - a);
+const porAnio = anios.map((anio) => ({ anio, posts: posts.filter((p) => p.pubDate.getFullYear() === anio) }));
+const pilares = Object.keys(PILARES)
+	.map((clave) => ({ clave, ...PILARES[clave], total: posts.filter((p) => p.pilar === clave).length }))
+	.filter((p) => p.total > 0);
+---
+
+<Page
+	title="Archivo"
+	description="Todas las entradas de Hedy Blog: busca por palabra, filtra por tema o recorre el año."
+	prose={false}
+>
+	<form class="buscar" role="search" onsubmit="return false">
+		<label class="sr-only" for="q">Buscar en el archivo</label>
+		<input id="q" type="search" placeholder="Buscar en el archivo…" autocomplete="off" />
+	</form>
+
+	<section class="empieza">
+		<h2>Empieza aquí</h2>
+		<ul>
+			{empieza.map((p) => <li><a href={p.url}>{p.title}</a></li>)}
+		</ul>
+	</section>
+
+	<section class="temas" aria-label="Temas">
+		<h2>Temas</h2>
+		<div class="chips">
+			<button type="button" class="pilar activo" data-pilar="">Todos ({posts.length})</button>
+			{
+				pilares.map((p) => (
+					<button type="button" class="pilar" data-pilar={p.clave} id={p.clave}>
+						<i style={`background:${p.color}`} />
+						{p.nombre} ({p.total})
+					</button>
+				))
+			}
+		</div>
+	</section>
+
+	<p id="vacio" hidden>No encontré entradas con esa búsqueda. Prueba con otra palabra.</p>
+
+	{
+		porAnio.map((grupo) => (
+			<section class="anio" data-anio>
+				<h2>{grupo.anio}</h2>
+				<ul class="lista">
+					{grupo.posts.map((p) => (
+						<li data-pilar={p.pilar} data-texto={`${p.title} ${p.description}`.toLowerCase()}>
+							<span class="fecha">
+								<FormattedDate date={p.pubDate} />
+							</span>
+							<a href={p.url}>{p.title}</a>
+							<i class="punto" style={`background:${p.pilarColor}`} title={p.pilarNombre} />
+						</li>
+					))}
+				</ul>
+			</section>
+		))
+	}
+</Page>
+
+<style>
+	.buscar input {
+		width: 100%;
+		padding: 0.75em 1.1em;
+		border: 1.5px solid var(--line);
+		border-radius: 999px;
+		background: var(--paper);
+		color: var(--ink);
+		font-family: var(--font-texto);
+	}
+	.buscar input::placeholder {
+		color: var(--muted);
+	}
+	h2 {
+		margin: 2.2rem 0 0.9rem;
+		font-size: 0.8rem;
+		font-family: var(--font-texto);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--muted);
+		padding-bottom: 0.6rem;
+		border-bottom: 1.5px solid var(--line);
+	}
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.empieza li {
+		padding: 0.3rem 0;
+		font-family: var(--font-titulo);
+		font-size: 1.1rem;
+	}
+	.empieza a,
+	.lista a {
+		color: var(--ink);
+		text-decoration: none;
+	}
+	.empieza a:hover,
+	.lista a:hover {
+		color: var(--accent);
+		text-decoration: underline;
+	}
+	.chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.chips button {
+		cursor: pointer;
+		font-family: var(--font-texto);
+		font-size: 0.85rem;
+		padding: 0.5em 0.9em;
+	}
+	.chips button.activo {
+		background: var(--sticky);
+		border-color: var(--glow);
+		color: var(--ink);
+		font-weight: 600;
+	}
+	.lista li {
+		display: flex;
+		align-items: baseline;
+		gap: 1rem;
+		padding: 0.55rem 0;
+	}
+	.lista li[hidden],
+	.anio[hidden] {
+		display: none;
+	}
+	.fecha {
+		flex: none;
+		width: 6.5rem;
+		font-size: 0.8rem;
+		color: var(--muted);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+	.lista a {
+		flex: 1;
+		font-family: var(--font-titulo);
+		font-size: 1.1rem;
+	}
+	.punto {
+		flex: none;
+		width: 0.7rem;
+		height: 0.7rem;
+		border-radius: 50%;
+	}
+	#vacio {
+		color: var(--muted);
+		font-style: italic;
+	}
+	@media (max-width: 560px) {
+		.lista li {
+			flex-wrap: wrap;
+			gap: 0.1rem 0.75rem;
+		}
+		.fecha {
+			width: 100%;
+		}
+	}
+</style>
+
+<script>
+	// Filtro del archivo: busca por título/descripción y por tema. Sin JavaScript se ven todas las entradas.
+	const q = document.querySelector<HTMLInputElement>('#q')!;
+	const items = [...document.querySelectorAll<HTMLElement>('.lista li')];
+	const anios = [...document.querySelectorAll<HTMLElement>('[data-anio]')];
+	const chips = [...document.querySelectorAll<HTMLButtonElement>('.chips button')];
+	const vacio = document.querySelector<HTMLElement>('#vacio')!;
+	let pilar = '';
+
+	const quitaAcentos = (t: string) => t.normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+	function aplicar() {
+		const texto = quitaAcentos(q.value.trim().toLowerCase());
+		let visibles = 0;
+		for (const li of items) {
+			const coincide =
+				(!pilar || li.dataset.pilar === pilar) && quitaAcentos(li.dataset.texto ?? '').includes(texto);
+			li.hidden = !coincide;
+			if (coincide) visibles++;
+		}
+		for (const a of anios) a.hidden = !a.querySelector('li:not([hidden])');
+		vacio.hidden = visibles > 0;
+	}
+
+	function elegir(clave: string) {
+		pilar = clave;
+		chips.forEach((c) => c.classList.toggle('activo', c.dataset.pilar === clave));
+		aplicar();
+	}
+
+	q.addEventListener('input', aplicar);
+	chips.forEach((c) => c.addEventListener('click', () => elegir(c.dataset.pilar ?? '')));
+	const inicial = location.hash.slice(1);
+	if (inicial && chips.some((c) => c.dataset.pilar === inicial)) elegir(inicial);
+</script>
