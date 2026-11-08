@@ -1,8 +1,11 @@
 ---
+import Brote from './Brote.astro';
+
 const today = new Date();
 ---
 
 <footer>
+	<Brote size={30} />
 	<nav class="start" aria-label="Empieza aquí">
 		<strong>Empieza aquí:</strong>
 		<a href="/2026-09-23-jardines-digitales-por-que-existen-blogs-personales/">Jardines digitales</a>
@@ -10,6 +13,7 @@ const today = new Date();
 		<a href="/2026-09-20-mentalidad-de-principiante-beginners-mind/">Mente de principiante</a>
 	</nav>
 	<nav class="links" aria-label="Páginas del sitio">
+		<a href="/archivo/">Archivo</a>
 		<a href="/jardin/">Jardín digital</a>
 		<a href="/acerca/">Acerca de</a>
 		<a href="/privacidad/">Privacidad</a>
@@ -17,35 +21,35 @@ const today = new Date();
 		<a href="/aviso-de-afiliados/">Aviso de afiliados</a>
 		<a href="/rss.xml">RSS</a>
 	</nav>
-	&copy; {today.getFullYear()} Made with love by <a href="https://abimelekcastrezana.com/">Abimelek</a>.
+	<p>
+		&copy; {today.getFullYear()} Made with love by <a href="https://abimelekcastrezana.com/">Abimelek</a>.
+	</p>
 </footer>
 <style>
-	.start {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 0.25em 1.25em;
-		margin-bottom: 0.75em;
-		font-size: 0.9em;
+	footer {
+		margin-top: 2rem;
+		padding: 2.5rem 1.5rem 5rem;
+		border-top: 1.5px solid var(--line);
+		background: color-mix(in srgb, var(--paper) 60%, transparent);
+		color: var(--muted);
+		text-align: center;
+		font-size: 0.9rem;
 	}
+	footer p {
+		margin: 0;
+	}
+	.start,
 	.links {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
 		gap: 0.25em 1.25em;
-		margin-bottom: 0.75em;
-		font-size: 0.9em;
-	}
-	footer {
-		padding: 2em 1em 6em 1em;
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
-		color: rgb(var(--gray));
-		text-align: center;
+		margin: 0.9rem 0;
 	}
 	footer a {
-		color: rgb(var(--gray));
+		color: var(--muted);
 	}
 	footer a:hover {
-		color: rgb(var(--gray-dark));
+		color: var(--ink);
 	}
 </style>

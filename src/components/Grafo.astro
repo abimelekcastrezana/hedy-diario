@@ -72,13 +72,13 @@ const datos = JSON.stringify({ nodos, enlaces, pilares: pilaresUsados });
 		display: block;
 		width: 100%;
 		height: var(--alto);
-		border: 1px solid rgb(var(--gray-light));
+		border: 1.5px solid var(--line);
 		border-radius: 12px;
-		background: radial-gradient(circle at 50% 40%, #fff, rgb(var(--gray-light)));
+		background: radial-gradient(circle at 50% 40%, var(--paper), color-mix(in srgb, var(--bg) 85%, var(--line)));
 		touch-action: pan-y;
 	}
 	line {
-		stroke: rgb(var(--gray));
+		stroke: var(--muted);
 		stroke-opacity: 0.55;
 		stroke-width: 1.8;
 		transition: stroke 0.15s, stroke-opacity 0.15s;
@@ -89,15 +89,15 @@ const datos = JSON.stringify({ nodos, enlaces, pilares: pilaresUsados });
 		transition: opacity 0.15s;
 	}
 	.nodo circle {
-		stroke: #fff;
+		stroke: var(--paper);
 		stroke-width: 2;
 		transition: stroke 0.15s;
 	}
 	.nodo text {
 		font-size: 12px;
-		fill: rgb(var(--gray-dark));
+		fill: var(--ink);
 		paint-order: stroke;
-		stroke: #fff;
+		stroke: var(--paper);
 		stroke-width: 3px;
 		pointer-events: none;
 	}
@@ -127,7 +127,7 @@ const datos = JSON.stringify({ nodos, enlaces, pilares: pilaresUsados });
 	figcaption {
 		margin: 0.6em 0 1.5em;
 		font-size: 0.8em;
-		color: rgb(var(--gray));
+		color: var(--muted);
 	}
 	.leyenda {
 		display: flex;

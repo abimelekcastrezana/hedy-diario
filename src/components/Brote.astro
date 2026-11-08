@@ -1,0 +1,30 @@
+---
+// El brote pixel de la ilustración de Hedy (sudadera, taza, laptop). L = hoja, S = tallo, D = tierra.
+type Props = { size?: number };
+const { size = 28 } = Astro.props;
+const filas = [
+	'.LLL...LLL.',
+	'LLLLL.LLLLL',
+	'.LLLL.LLLL.',
+	'..LLL.LLL..',
+	'....LSL....',
+	'.....S.....',
+	'.....S.....',
+	'..DDDDDDD..',
+];
+const colores: Record<string, string> = { L: '#7fa83f', S: '#3d5620', D: '#6b4a3a' };
+const celdas = filas.flatMap((fila, y) =>
+	[...fila].flatMap((c, x) => (c === '.' ? [] : [{ x, y, fill: colores[c] }])),
+);
+---
+
+<svg
+	class="brote"
+	width={size}
+	height={(size * filas.length) / 11}
+	viewBox="0 0 11 8"
+	shape-rendering="crispEdges"
+	aria-hidden="true"
+>
+	{celdas.map((c) => <rect x={c.x} y={c.y} width="1" height="1" fill={c.fill} />)}
+</svg>

@@ -1,41 +1,83 @@
 ---
 import { SITE_TITLE } from '../consts';
+import Brote from './Brote.astro';
+
+const ruta = Astro.url.pathname;
+const enlaces = [
+	{ href: '/archivo/', texto: 'Archivo' },
+	{ href: '/jardin/', texto: 'Jardín' },
+	{ href: '/acerca/', texto: 'Acerca de' },
+];
 ---
 
 <header>
-	<nav>
-		<h2><a href={import.meta.env.BASE_URL}>{SITE_TITLE}</a></h2>
-		<a class="about" href="/acerca/">Acerca de</a>
+	<nav aria-label="Principal">
+		<a class="marca" href={import.meta.env.BASE_URL}>
+			<Brote size={26} />
+			<span>{SITE_TITLE}</span>
+		</a>
+		<ul>
+			{
+				enlaces.map((e) => (
+					<li>
+						<a href={e.href} aria-current={ruta.startsWith(e.href) ? 'page' : undefined}>
+							{e.texto}
+						</a>
+					</li>
+				))
+			}
+			<li><a href="/rss.xml">RSS</a></li>
+		</ul>
 	</nav>
 </header>
 <style>
 	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
-	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
-	}
-
-	.about {
-		font-size: 0.85em;
-		text-decoration: none;
-		color: rgb(var(--gray));
-	}
-	.about:hover {
-		color: rgb(var(--gray-dark));
-	}
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
+		padding: 0 1.5rem;
+		border-bottom: 1.5px solid var(--line);
+		background: color-mix(in srgb, var(--paper) 70%, transparent);
+		backdrop-filter: blur(6px);
 	}
 	nav {
+		width: 780px;
+		max-width: 100%;
+		margin: auto;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 0.5em 0;
+		flex-wrap: wrap;
+		gap: 0.25rem 1rem;
+		padding: 0.7rem 0;
+	}
+	.marca {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		font-family: var(--font-titulo);
+		font-weight: 600;
+		font-size: 1.15rem;
+		color: var(--ink);
+		text-decoration: none;
+	}
+	ul {
+		display: flex;
+		gap: 1.25rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	ul a {
+		font-size: 0.9rem;
+		color: var(--muted);
+		text-decoration: none;
+	}
+	ul a:hover,
+	ul a[aria-current='page'] {
+		color: var(--ink);
+	}
+	ul a[aria-current='page'] {
+		text-decoration: underline;
+		text-decoration-color: var(--leaf);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 0.3em;
 	}
 </style>

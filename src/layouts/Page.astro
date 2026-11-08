@@ -4,26 +4,22 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_TITLE } from '../consts';
 
-type Props = { title: string; description: string };
+type Props = { title: string; description: string; prose?: boolean };
 
-const { title, description } = Astro.props;
+const { title, description, prose = true } = Astro.props;
 ---
 
 <html lang="es">
 	<head>
 		<BaseHead title={`${title} | ${SITE_TITLE}`} description={description} />
 		<style>
-			.page {
-				color: rgb(var(--gray-dark));
+			.page h1 {
+				margin-bottom: 1.5rem;
+				padding-bottom: 1.2rem;
+				border-bottom: 1.5px solid var(--line);
 			}
-			.page :global(h1) {
-				margin-bottom: 0.5em;
-			}
-			.page :global(h2) {
-				margin-top: 1.8em;
-			}
-			.updated {
-				color: rgb(var(--gray));
+			.page :global(.updated) {
+				color: var(--muted);
 				font-size: 0.85em;
 			}
 		</style>
@@ -31,7 +27,7 @@ const { title, description } = Astro.props;
 	<body>
 		<Header />
 		<main>
-			<article class="page">
+			<article class:list={['page', { prose }]}>
 				<h1>{title}</h1>
 				<slot />
 			</article>
