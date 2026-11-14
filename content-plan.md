@@ -18,6 +18,12 @@ Concepto real (investigado) + reflexión personal. Ver AGENTS.md.
 11. Estado de flow: qué pasa en tu cabeza cuando te pierdes en lo que haces (Mihaly Csikszentmihalyi, libro Flow, 1990; usar la palabra 'flow' para no confundir con flujo de efectivo). Pilar: Foco y productividad. Conectar con Técnica Pomodoro.
 12. Método de los loci o palacio de la memoria: cómo funciona y de dónde viene (anécdota de Simónides de Ceos). Pilar: Aprender y pensar. Conectar con Curva del olvido.
 13. Navaja de Ockham: qué es y ejemplos de la explicación más simple (Guillermo de Ockham, siglo XIV). Pilar: Aprender y pensar. Conectar con Sesgo de confirmación.
+14. Doomscrolling: qué es, por qué cuesta tanto soltar el feed de malas noticias y qué hacer para parar (término popularizado hacia 2018-2020; hay estudios sobre consumo de noticias negativas y bienestar; no dar consejos clínicos). Pilar: Cultura tech con alma. Conectar con Efecto Zeigarnik y Técnica Pomodoro.
+15. Método SQ3R para leer y estudiar a fondo: Survey, Question, Read, Recite, Review (Francis P. Robinson, libro Effective Study, 1946) y cómo aplicarlo a un texto largo sin distraerte. Pilar: Aprender y pensar. Conectar con Técnica Feynman y Método Cornell.
+16. Efecto de la prueba (testing effect) o práctica de recuperación: por qué intentar recordar enseña más que releer (Roediger y Karpicke, 2006; estudios previos desde Gates, 1917). Pilar: Aprender y pensar. Conectar con Curva del olvido de Ebbinghaus y Técnica Feynman.
+17. Efecto Google o amnesia digital: qué pasa con la memoria cuando sabemos que podemos buscarlo después (Sparrow, Liu y Wegner, Science, 2011; mencionar con honestidad que las réplicas son mixtas). Pilar: Cultura tech con alma. Conectar con Segundo cerebro digital y Zettelkasten.
+18. Escritura libre (freewriting): escribir sin parar ni corregir para pensar con claridad (Peter Elbow, Writing Without Teachers, 1973; Ken Macrorie). Pilar: Escribir y crear en internet. Conectar con Bullet journal y Método Cornell.
+19. Dificultades deseables: por qué aprender con un poco de esfuerzo dura más (Robert A. Bjork, 1994; relación con espaciado e intercalado). Pilar: Aprender y pensar. Conectar con Efecto de la prueba y Curva del olvido.
 
 ## Publicados
 
